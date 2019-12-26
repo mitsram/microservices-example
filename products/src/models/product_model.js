@@ -1,4 +1,5 @@
 const sql = require('./db')
+const mysql = require('mysql')
 
 let product = {}
 
@@ -34,6 +35,19 @@ product.findById = (id) => {
 product.save = (objProduct) => {
     return new Promise((resolve, reject) => {
         sql.query('INSERT INTO product set ?', objProduct, (err, result) => {
+            if (err) {
+                return reject(err)
+            } else {
+                return resolve(result)
+            }
+        })
+    })
+}
+
+product.update = (id, objBody) => {
+    return new Promise((resolve, reject) => {
+        let query = mysql.format("UPDATE product SET ? WHERE id = ?", [objBody, id])
+        sql.query(query, (err, result) => {
             if (err) {
                 return reject(err)
             } else {
